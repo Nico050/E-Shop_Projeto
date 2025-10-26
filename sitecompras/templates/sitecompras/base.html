@@ -1,0 +1,14 @@
+<p>
+    <a href="{% url 'index' %}">Big-Shop</a> - 
+    {% if user.is_authenticated %}
+        Olá {{user.username}}! - 
+        <a href="{% url 'cart_details' %}">Carrinho</a> - 
+        <a href="{% url 'logout' %}">Sair</a>
+    {% else %}
+        <a href="{% url 'login' %}">Entrar</a> - 
+        <a href="{% url 'register' %}">Registrar</a>
+    {% endif %}
+</p>
+
+{% block content %}
+{% endblock content %}

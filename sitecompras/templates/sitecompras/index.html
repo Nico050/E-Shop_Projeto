@@ -1,0 +1,10 @@
+{% extends "sitecompras/base.html" %}
+
+{% block content %}
+    {% for produto in produtos %}
+        <li>
+            <a href="{% url 'produto_page' produto.id %}">{{ produto.name }}</a>
+            <p>R$ {{ produto.price }}</p>
+        </li>
+    {% endfor %}</li>
+{% endblock content %}

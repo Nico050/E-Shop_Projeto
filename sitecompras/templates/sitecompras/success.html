@@ -1,0 +1,20 @@
+{% extends "sitecompras/base.html" %}
+
+{% block content %}
+    <p>Compra concluida!</p>
+    <p>Olá {{ request.user.username }}! Seu pedido #{{ order.id }} no valor de R$ {{ order.total_paid }} foi computado com sucesso!</p>
+    <p>Confira agora alguns detalhes do seu pedido:</p>
+    <p>Status: {{ order.status }}</p>
+    <p>Método de pagamento: {{ order.payment }}</p>
+    <p>CEP de entrega: {{ order.ship_cep }}</p>
+    <p>Itens pedidos:</p>
+    {% for item in order.items.all %}
+        <li>{{ item.products.name }} - {{ item.quantity }} - R$ {{ item.products.price }}</li>
+    {% endfor %}
+    <hr>
+    <p>Valor do Frete = R$ {{ order.ship_cost }}</p>
+    <p>Valor Pago = R$ {{ order.total_paid }}</p>
+    <hr>
+    <a href="{% url 'index' %}">Voltar para a página inicial</a>
+
+{% endblock content %}

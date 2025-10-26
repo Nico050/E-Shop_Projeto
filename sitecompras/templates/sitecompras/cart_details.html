@@ -1,0 +1,51 @@
+{% extends "sitecompras/base.html" %}
+
+{% block content %}
+    <p>Seu Carrinho de Compras:</p>
+    
+    {% if not cart.items.all %}
+        <p>Seu carrinho está vazio.</p>
+    {% else %}
+        {% for item in cart.items.all %}
+            <p>
+                {{item.product.name}} - 
+                {{item.quantity}} - 
+                R$ {{item.get_total_price }}
+                <form action="{% url 'update_cart' item.id %}" method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="number" 
+                        name="quantity" 
+                        value="{{ item.quantity }}" 
+                        min="0"  max="999">
+                    <button type="submit">Atualizar</button>
+                </form>
+                <form action="{% url 'remove_cart' item.id %}" method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Remover</button>
+                </form>
+            </p>
+        {% endfor %}
+        <p>------------------------------------------------</p>
+        <p>Calcular Frete:</p>
+        <form action="{% url 'calculated_shipping' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <label for="cep">CEP</label>
+            <input type="text" name="cep" id="cep" placeholder="000000-000" value="{{ cart.s_cep|default:'' }}">
+            <button type="submit">Calcular</button>
+        </form>
+        
+        <p>
+            -------------------------------------------
+        </p>
+        <p>
+            Parcial: R$ {{ cart.get_parcial_price }} + 
+            Frete: R$ {{ cart.s_cost }} = 
+            Total: R$ {{ cart.get_grand_total }}
+        </p>
+
+        <a href="{% url 'checkout' %}">Finalizar Compra</a>
+    {% endif %}
+{% endblock content %}

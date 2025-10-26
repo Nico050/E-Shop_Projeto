@@ -1,0 +1,33 @@
+{% extends "sitecompras/base.html" %}
+
+{% block content %}
+    <p>Finalizar Compra</p>
+    <p>Resumo do Pedido</p>
+    <p>Itens da compra</p>
+    {% for item in cart.items.all %}
+        <li>{{ item.product.name }} - {{ item.quantity }} - R$ {{ item.get_total_price }}</li>
+    {% endfor %}
+    <a href="{% url 'cart_details' %}">Editar carrinho</a>
+
+    <p>Parcial = R$ {{ cart.get_parcial_price }}</p>
+    <p>Frete = R$ {{ cart.s_cost }}</p>
+    <p>Total = R$ {{ cart.get_grand_total }}</p>
+
+    <form action="{% url 'process' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>Selecione o método de pagamento</p>
+        {% for value, label in payment_choices %}
+            <input type="radio"
+                id="pay-{{ value }}"
+                name="payment_method"
+                value="{{ value }}"
+                {% if forloop.first %}required{% endif %}>
+            <label for="pay-{{ value }}">{{ label }}</label>
+            <br>
+        {% endfor %}
+        <button type="submit">Finalizar Compra</button>
+    </form>
+    
+
+{% endblock content %}
