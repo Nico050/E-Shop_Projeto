@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
-from .models import Produtos, Cart, CartItem, Order, OrderItem
+from .models import Produtos, Cart, CartItem, Order, OrderItem, Reviews
+from .forms import ReviewForm
 from django.contrib import messages
 
 
@@ -14,13 +15,40 @@ def index(request):
 
 def produto_page(request, produto_id):
     produto = Produtos.objects.get(id=produto_id)
-    context = {"produto": produto}
+    reviews = Reviews.objects.all()
+    reviews_form = None
+    if request.user.is_authenticated:
+        user_review = reviews.filter(user=request.user, product=produto).first()
+        if not user_review:
+            reviews_form = ReviewForm()
+    context = {"produto": produto, "reviews": reviews, 'reviews_form': reviews_form}
     return render(request, 'sitecompras/produto_page.html', context)
 
 def reset_ship(cart):
     cart.s_cost = 0.00
     cart.s_cep = None
     cart.save()
+
+@login_required
+def add_review(request, produto_id):
+    product = get_object_or_404(Produtos, id=produto_id)
+    form = ReviewForm(request.POST)
+    if form.is_valid():
+        try:
+            review = form.save(commit=False)
+            review.user = request.user
+            review.product = product
+            review.stars = form.cleaned_data['rating']
+            review.content = form.cleaned_data['content']
+            review.save()
+        except Exception as e:
+            messages.error(request, f'Ocorreu um erro ao adicionar a avaliação: {e}')
+
+    
+    else:
+        messages.error(request, 'Por favor, preencha o formulário corretamente.')
+
+    return redirect('produto_page', produto_id=produto_id)
 
 @login_required
 def add_cart(request, produto_id):

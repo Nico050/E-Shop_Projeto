@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 
 class Produtos(models.Model):
     name = models.CharField(max_length = 120)
@@ -13,6 +15,20 @@ class Produtos(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Reviews(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Produtos, on_delete=models.CASCADE)
+    content = models.TextField()
+    stars = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('product', 'user')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.user.username} - {self.product.name} - ({self.stars} estrelas)'
     
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
