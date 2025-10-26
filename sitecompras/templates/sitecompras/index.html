@@ -2,9 +2,11 @@
 
 {% block content %}
     {% for produto in produtos %}
+        <hr>
+        <a href="{% url 'produto_page' produto.id %}"><img src="{{ produto.photo.url }}" style="max-width: 200px;"></a>
         <li>
-            <a href="{% url 'produto_page' produto.id %}">{{ produto.name }}</a>
+            {{ produto.name }}
             <p>R$ {{ produto.price }}</p>
         </li>
-    {% endfor %}</li>
+    {% endfor %}
 {% endblock content %}

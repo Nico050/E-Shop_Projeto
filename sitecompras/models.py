@@ -7,7 +7,12 @@ class Produtos(models.Model):
     name = models.CharField(max_length = 120)
     description = models.TextField()
     price = models.DecimalField(decimal_places = 2, max_digits = 10000)
-    photo = models.ImageField()
+    photo = models.ImageField(
+        upload_to='products/',
+        null=True,
+        blank=True,
+        verbose_name="Foto do produto"
+    )
 
     class Meta:
         verbose_name = "Produto"

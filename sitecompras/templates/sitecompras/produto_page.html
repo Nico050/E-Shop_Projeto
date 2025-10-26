@@ -1,7 +1,7 @@
 {% extends "sitecompras/base.html" %}
 
 {% block content %}
-    <p>{{ produto.photo }}</p>
+    <img src="{{ produto.photo.url }}" style="max-width: 400px;">
     <p>{{ produto.name }}</p>
     <p>R$ {{ produto.price }}</p>
     <p>{{ produto.description }}</p>
