@@ -15,7 +15,7 @@ def index(request):
 
 def produto_page(request, produto_id):
     produto = Produtos.objects.get(id=produto_id)
-    reviews = Reviews.objects.all()
+    reviews = Reviews.objects.filter(product=produto).all()
     reviews_form = None
     if request.user.is_authenticated:
         user_review = reviews.filter(user=request.user, product=produto).first()

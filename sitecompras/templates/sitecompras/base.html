@@ -1,7 +1,7 @@
 <p>
     <a href="{% url 'index' %}">Big-Shop</a> - 
     {% if user.is_authenticated %}
-        Olá {{user.username}}! - 
+        Olá <img src="{{ user.profile.p_pic.url }}" alt="Foto de Perfil" style="width: 15px; height: 15px; border-radius: 50%; object-fit: cover;"> <a href="{% url 'edit_profile' %}">{{ user.username }}</a>! - 
         <a href="{% url 'cart_details' %}">Carrinho</a> - 
         <a href="{% url 'logout' %}">Sair</a>
     {% else %}

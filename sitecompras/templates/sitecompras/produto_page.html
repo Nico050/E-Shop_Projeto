@@ -33,7 +33,7 @@
     <p>Avaliações do produto {{ reviews.count }}</p>
     {% for review in reviews %}
         <hr>
-        <p>{{ review.user.username }} - {{ review.stars }} Estrelas - Avaliação feita em: {{ review.created_at|date:"d/m/Y H:i" }}</p>
+        <p><img src="{{ review.user.profile.p_pic.url }}" alt="Foto de Perfil" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;"></p>{{ review.user.username }} - {{ review.stars }} Estrelas - Avaliação feita em: {{ review.created_at|date:"d/m/Y H:i" }}</p>
         <p>{{ review.content|linebreaks }}</p>
         <hr>
     {% endfor %}

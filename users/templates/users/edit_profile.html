@@ -1,0 +1,21 @@
+{% extends "sitecompras/base.html" %}
+
+{% block content %}
+    <p>Editar Perfil - {{ user.username }}</p>
+    <hr>
+    <p><img src="{{ request.user.profile.p_pic.url }}" alt="Foto de Perfil" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;"></p>
+    <p>Nome completo: {{ user.first_name }} {{ user.last_name }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Bio: {{ user.profile.bio }}</p>
+
+    <form actiom="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <fieldset>
+            <legend>Atualizar dados</legend>
+            {{u_form.as_p}}
+            {{p_form.as_p}}
+        </fieldset>
+        <button type="submit">Atualizar</button>
+    </form>
+{% endblock content %}
