@@ -1,0 +1,6 @@
+# requirements.txt
+Django
+Pillow
+gunicorn
+psycopg2-binary
+dj-database-url

@@ -6,7 +6,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 class Produtos(models.Model):
     name = models.CharField(max_length = 120)
     description = models.TextField()
-    price = models.DecimalField(decimal_places = 2, max_digits = 10000)
+    price = models.DecimalField(max_digits=10,decimal_places = 2)
     photo = models.ImageField(
         upload_to='products/',
         null=True,

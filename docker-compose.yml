@@ -1,0 +1,37 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=django_db
+      - POSTGRES_USER=django_user
+      - POSTGRES_PASSWORD=django_pass
+    ports:
+      - "5432:5432" # Opcional: expõe o DB para o seu computador local
+
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py makemigrations sitecompras users &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app        # Monta o código local no container para live-reload
+      - media_volume:/app/media # Persiste os uploads de imagens
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://django_user:django_pass@db:5432/django_db
+      - DJANGO_SETTINGS_MODULE=ecommerce.settings  # <-- MUDE "meu_projeto"
+      - DJANGO_SECRET_KEY=8o5a)t^mc)tmvi9hj2ein!ogd@boit2i+26vrqu8m9u%zt&#nu # <-- MUDE ISSO
+      - DEBUG=1
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+  media_volume:
