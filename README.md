@@ -1,4 +1,4 @@
-# 🛒 E-Shop_Projeto
+# 🛒 Big Shop
 
 ## Descrição
 
