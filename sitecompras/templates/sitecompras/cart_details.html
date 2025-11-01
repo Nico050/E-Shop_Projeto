@@ -1,51 +1,72 @@
 {% extends "sitecompras/base.html" %}
+{% load bootstrap3 %}
+
+{% block header %}
+    <h2>Seu Carrinho de Compras</h2>
+{% endblock header %}
 
 {% block content %}
-    <p>Seu Carrinho de Compras:</p>
     
     {% if not cart.items.all %}
         <p>Seu carrinho está vazio.</p>
     {% else %}
         {% for item in cart.items.all %}
-            <p>
-                {{item.product.name}} - 
-                {{item.quantity}} - 
-                R$ {{item.get_total_price }}
-                <form action="{% url 'update_cart' item.id %}" method="POST" style="display: inline;">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <input type="number" 
-                        name="quantity" 
-                        value="{{ item.quantity }}" 
-                        min="0"  max="999">
-                    <button type="submit">Atualizar</button>
-                </form>
-                <form action="{% url 'remove_cart' item.id %}" method="POST" style="display: inline;">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit">Remover</button>
-                </form>
-            </p>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <span class="badge"><h4>Quantidade: {{ item.quantity }}</h4></span>
+                    <div class="media">
+                        <div class="media-left">
+                            <a href="{% url 'produto_page' item.product.id %}">
+                                <img class="media-object" src="{{ item.product.photo.url }}" alt="Foto do Produto" style="width: 150px; height: 150px; object-fit: cover;">
+                            </a>
+                        </div>
+
+                        <div class="media-body">
+                            <h4>{{ item.product.name }}</h4>
+                            <h4>Preço de uma unidade: R$ {{ item.product.price }}</h4>
+                            <h4>Preço total: R$ {{ item.get_total_price }}</h4>
+                            <p><form action="{% url 'update_cart' item.id %}" method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <input type="number" 
+                                        name="quantity" 
+                                        value="{{ item.quantity }}" 
+                                        min="0"  max="999">
+                                        <button type="submit">Atualizar</button>
+                                </form>
+                                <form action="{% url 'remove_cart' item.id %}" method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                        <button type="submit">Remover</button>
+                                </form>
+                            </p>
+                        </div>
+                            
+                    </div>
+                </li>
+            </ul>
         {% endfor %}
-        <p>------------------------------------------------</p>
+        <hr>
         <p>Calcular Frete:</p>
-        <form action="{% url 'calculated_shipping' %}" method="post">
+        <form action="{% url 'calculated_shipping' %}" method="post" class="form">
             {% csrf_token %}
             {{ form.as_p }}
             <label for="cep">CEP</label>
             <input type="text" name="cep" id="cep" placeholder="000000-000" value="{{ cart.s_cep|default:'' }}">
-            <button type="submit">Calcular</button>
+            {% buttons %}
+                <button type="submit" class="btn btn-primary">Calcular</button>
+            {% endbuttons %}
         </form>
         
-        <p>
-            -------------------------------------------
-        </p>
-        <p>
-            Parcial: R$ {{ cart.get_parcial_price }} + 
-            Frete: R$ {{ cart.s_cost }} = 
-            Total: R$ {{ cart.get_grand_total }}
-        </p>
+        <hr>
+        
+        <div class="page-header">
+            <h3>Parcial: R$ {{ cart.get_parcial_price }}</h3>
+            <h3>Frete: R$ {{ cart.s_cost }}</h3>
+            <hr>
+            <h3>Total: R$ {{ cart.get_grand_total }}</h3>
+            <h3><a href="{% url 'checkout' %}" class="btn btn-primary" role="button">Finalizar Compra</a></h3>
+        </div>
 
-        <a href="{% url 'checkout' %}">Finalizar Compra</a>
     {% endif %}
 {% endblock content %}

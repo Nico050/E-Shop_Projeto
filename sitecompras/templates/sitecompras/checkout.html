@@ -1,22 +1,46 @@
 {% extends "sitecompras/base.html" %}
+{% load bootstrap3 %}
+
+{% block header %}
+    <h2>Finalizar Compra</h2>
+{% endblock header %}
 
 {% block content %}
-    <p>Finalizar Compra</p>
-    <p>Resumo do Pedido</p>
-    <p>Itens da compra</p>
+    <h3>Resumo do Pedido:</h3>
     {% for item in cart.items.all %}
-        <li>{{ item.product.name }} - {{ item.quantity }} - R$ {{ item.get_total_price }}</li>
-    {% endfor %}
-    <a href="{% url 'cart_details' %}">Editar carrinho</a>
 
-    <p>Parcial = R$ {{ cart.get_parcial_price }}</p>
-    <p>Frete = R$ {{ cart.s_cost }}</p>
-    <p>Total = R$ {{ cart.get_grand_total }}</p>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <span class="badge"><h4>Quantidade: {{ item.quantity }}</h4></span>
+                <div class="media">
+                    <div class="media-left">
+                        <a href="{% url 'produto_page' item.product.id %}">
+                            <img class="media-object" src="{{ item.product.photo.url }}" alt="Foto do Produto" style="width: 150px; height: 150px; object-fit: cover;">
+                        </a>
+                    </div>
+
+                    <div class="media-body">
+                        <h4>{{ item.product.name }}</h4>
+                        <h4>Preço de uma unidade: R$ {{ item.product.price }}</h4>
+                        <h4>Preço total: R$ {{ item.get_total_price }}</h4>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    {% endfor %}
+    <a href="{% url 'cart_details' %}" class="btn btn-primary" role="button"><h5>Editar carrinho</h5></a>
+    
+    <div class="page-header">
+        <h4>Parcial = R$ {{ cart.get_parcial_price }}</h4>
+        <h4>Frete = R$ {{ cart.s_cost }}</h4>
+        <hr>
+        <h4>Total = R$ {{ cart.get_grand_total }}</h4>
+    </div>
 
     <form action="{% url 'process' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <p>Selecione o método de pagamento</p>
+        <h4>Selecione o método de pagamento</h4>
         {% for value, label in payment_choices %}
             <input type="radio"
                 id="pay-{{ value }}"
@@ -26,7 +50,9 @@
             <label for="pay-{{ value }}">{{ label }}</label>
             <br>
         {% endfor %}
-        <button type="submit">Finalizar Compra</button>
+        {% buttons %}
+            <button type="submit" class="btn btn-primary"><h4>Finalizar Compra</h4></button>
+        {% endbuttons %}
     </form>
     
 

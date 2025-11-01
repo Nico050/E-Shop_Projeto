@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sitecompras',
     'users',
+    'bootstrap3',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +129,6 @@ LOGIN_URL = '/users/login'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+BOOTSTRAP3 = {
+    'include_jquery': True,
+}

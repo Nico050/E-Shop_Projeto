@@ -1,20 +1,45 @@
 {% extends "sitecompras/base.html" %}
+{% load bootstrap3 %}
+
+{% block header %}
+    <h2>COMPRA CONCLUIDA COM SUCESSO!</h2>
+    <h3>Olá {{ request.user.username }}! Seu pedido #{{ order.id }} no valor de R$ {{ order.total_paid }} foi computado com sucesso!</h3>
+{% endblock header %}
 
 {% block content %}
-    <p>Compra concluida!</p>
-    <p>Olá {{ request.user.username }}! Seu pedido #{{ order.id }} no valor de R$ {{ order.total_paid }} foi computado com sucesso!</p>
-    <p>Confira agora alguns detalhes do seu pedido:</p>
-    <p>Status: {{ order.status }}</p>
-    <p>Método de pagamento: {{ order.payment }}</p>
-    <p>CEP de entrega: {{ order.ship_cep }}</p>
-    <p>Itens pedidos:</p>
+    <h3>Confira agora alguns detalhes do seu pedido:</h3>
+    <hr>
+    <h4>Status: {{ order.status }}</h4>
+    <h4>Método de pagamento: {{ order.payment }}</h4>
+    <h4>CEP de entrega: {{ order.ship_cep }}</h4>
+    <h4>Itens pedidos:</h4>
     {% for item in order.items.all %}
-        <li>{{ item.products.name }} - {{ item.quantity }} - R$ {{ item.products.price }}</li>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <span class="badge"><h4>Quantidade: {{ item.quantity }}</h4></span>
+                <div class="media">
+                    <div class="media-left">
+                        <a href="{% url 'produto_page' item.products.id %}">
+                            <img class="media-object" src="{{ item.products.photo.url }}" alt="Foto do Produto" style="width: 150px; height: 150px; object-fit: cover;">
+                        </a>
+                    </div>
+
+                    <div class="media-body">
+                        <h4>{{ item.products.name }}</h4>
+                        <h4>Preço de uma unidade: R$ {{ item.products.price }}</h4>
+                        <h4>Preço total: R$ {{ item.get_total_price }}</h4>
+
+                    </div>
+                </div>
+            </li>
+        </ul>
     {% endfor %}
-    <hr>
-    <p>Valor do Frete = R$ {{ order.ship_cost }}</p>
-    <p>Valor Pago = R$ {{ order.total_paid }}</p>
-    <hr>
-    <a href="{% url 'index' %}">Voltar para a página inicial</a>
+
+    <div class="page-header">
+        <h4>Valor do Frete = R$ {{ order.ship_cost }}</h4>
+        <h4>Valor Pago = R$ {{ order.total_paid }}</h4>
+    </div>
+
+    <a href="{% url 'index' %}" class="btn btn-primary" role="button"><h4>Voltar para a loja</h4></a>
 
 {% endblock content %}

@@ -1,13 +1,24 @@
 {% extends "sitecompras/base.html" %}
 
-{% block content %}
-    <p>Editar Perfil - {{ user.username }}</p>
-    <hr>
-    <p><img src="{{ request.user.profile.p_pic.url }}" alt="Foto de Perfil" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;"></p>
-    <p>Nome completo: {{ user.first_name }} {{ user.last_name }}</p>
-    <p>Email: {{ user.email }}</p>
-    <p>Bio: {{ user.profile.bio }}</p>
+{% block header %}
+    <h2>Ver / Editar Perfil <small>{{ user.username }}</small></h2>
 
+    <div class="media">
+        <div class="media-left">
+            <a href="{{ request.user.profile.p_pic.url }}">
+                <img class="media-object" src="{{ request.user.profile.p_pic.url }}" alt="Foto de Perfil" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
+            </a>
+        </div>
+
+        <div class="media-body">
+            <h4>Nome completo: {{ user.first_name }} {{ user.last_name }}</h4>
+            <p>Email: {{user.email}}</p>
+            <p>{{ user.profile.bio|linebreaks }}</p>
+        </div>
+    </div>
+{% endblock header %}
+
+{% block content %}
     <form actiom="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 

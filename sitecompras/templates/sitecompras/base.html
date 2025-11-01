@@ -1,14 +1,54 @@
-<p>
-    <a href="{% url 'index' %}">Big-Shop</a> - 
-    {% if user.is_authenticated %}
-        Olá <img src="{{ user.profile.p_pic.url }}" alt="Foto de Perfil" style="width: 15px; height: 15px; border-radius: 50%; object-fit: cover;"> <a href="{% url 'edit_profile' %}">{{ user.username }}</a>! - 
-        <a href="{% url 'cart_details' %}">Carrinho</a> - 
-        <a href="{% url 'logout' %}">Sair</a>
-    {% else %}
-        <a href="{% url 'login' %}">Entrar</a> - 
-        <a href="{% url 'register' %}">Registrar</a>
-    {% endif %}
-</p>
+{% load bootstrap3 %}
+<!DOCTYPE html>
+<html lang="pt-br">
 
-{% block content %}
-{% endblock content %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="description" content="Aplicação de um ecommerce para a matéria de Engenharia de Software.">
+        <meta name="author" content="Nícolas de Almeida e Marco Albuquerque">
+        <meta name="keywords" content="lojo, ecommerce, e-commerce, store">
+        <title>Big-Shop</title>
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+    </head>   
+
+    <body>
+        <nav class="navbar navbar-default navbar-static-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+
+                    </button>
+                    <ul class="nav navbar-nav">
+                        <a class="navbar-brand" href="{% url 'index' %}"><h2>Big-Shop</h2></a>
+                    </ul>
+                </div>
+
+                <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'edit_profile' %}"><h4>Olá {{ user.username }}!</h4></a></li>
+                            <li><a href="{% url 'cart_details' %}"><h4>Carrinho</h4></a></li>
+                            <li><a href="{% url 'logout' %}"><h4>Sair</h4></a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}"><h4>Entrar</h4></a></li>
+                            <li><a href="{% url 'register' %}"><h4>Registrar</h4></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="page-header">
+                {% block header %}{% endblock header %}
+            </div>
+            
+            <div>
+                {% block content %}{% endblock content %}
+            </div>
+        </div>
+        
+    </body>
+</html>

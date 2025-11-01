@@ -1,12 +1,44 @@
 {% extends "sitecompras/base.html" %}
 
+{% block header %}
+
+<div class="page-header">
+    <h2>Confira nossos produtos!</h2>
+</div>
+
+{% endblock header %}
+
 {% block content %}
-    {% for produto in produtos %}
-        <hr>
-        <a href="{% url 'produto_page' produto.id %}"><img src="{{ produto.photo.url }}" style="max-width: 200px;"></a>
-        <li>
-            {{ produto.name }}
-            <p>R$ {{ produto.price }}</p>
-        </li>
-    {% endfor %}
+
+    <div class="row">
+        {% for produto in produtos %}
+        
+        <div class="col-md-2">
+            
+            <div class="thumbnail">
+                
+                <a href="{% url 'produto_page' produto.id %}">
+                    <img src="{{ produto.photo.url }}" alt="{{ produto.name }}" class="img-responsive" sizes="">
+                </a>
+                
+                <div class="caption">
+                    
+                    <h4>
+                        <a href="{% url 'produto_page' produto.id %}">{{ produto.name }}</a>
+                    </h4>
+                    
+                    <h3>R$ {{ produto.price }}</h3>
+
+                    <p>
+                        <a href="{% url 'produto_page' produto.id %}" class="btn btn-primary" role="button">
+                            Ver detalhes
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        {% endfor %}
+    </div>
+    
 {% endblock content %}

@@ -1,41 +1,69 @@
 {% extends "sitecompras/base.html" %}
+{% load bootstrap3 %}
+
+{% block header %}
+    <div class="media">
+        <div class="media-left">
+            <a href="{{ produto.photo.url }}">
+                <img class="media-object" src="{{ produto.photo.url }}" alt="Foto do Produto" style="width: 400px; height: 400px; object-fit: cover;">
+            </a>
+        </div>
+
+        <div class="media-body">
+            <h3>{{ produto.name }}</h3>
+            <h3>R$ {{ produto.price }}</h3>
+            <form action="{% url 'add_cart' produto.id %}" method="post" class="form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <label for="quantity">Quantidade:</label>
+                <input type="number" name="quantity" value="1" min="1" max="999">
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">Adicionar ao carrinho</button>
+                {% endbuttons %}
+            </form>
+            <p>{{ produto.description|linebreaks }}</p>
+        </div>
+
+    </div>
+{% endblock header%}
 
 {% block content %}
-    <img src="{{ produto.photo.url }}" style="max-width: 400px;">
-    <p>{{ produto.name }}</p>
-    <p>R$ {{ produto.price }}</p>
-    <p>{{ produto.description }}</p>
-
-    <form action="{% url 'add_cart' produto.id %}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <label for="quantity">Quantidade:</label>
-        <input type="number" name="quantity" value="1" min="1" max="999">
-        <button type="submit">Adicionar ao carrinho</button>
-    </form>
 
     {% if request.user.is_authenticated %}
         {% if reviews_form %}
             <p>Avalie o produto!</p>
-            <form action="{% url 'add_review' produto.id %}" method="post">
+            <form action="{% url 'add_review' produto.id %}" method="post" class="form">
                 {% csrf_token %}
                 {{ reviews_form.as_p }}
-                <button type="submit">Enviar</button>
+
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                {% endbuttons %}
             </form>
         {% else %}
             <p>Você já avaliou este produto.</p>
         {% endif %}
     
     {% else %}
-        <a href="{% url 'login' %}">Faça login para avaliar</a>
+        <a href="{% url 'login' %}" class="btn btn-primary" role="button"><h5>Faça login para avaliar</h5></a>
     {% endif %}
     
-    <p>Avaliações do produto {{ reviews.count }}</p>
+    <h4>Avaliações do produto {{ reviews.count }}</h4>
     {% for review in reviews %}
-        <hr>
-        <p><img src="{{ review.user.profile.p_pic.url }}" alt="Foto de Perfil" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;"></p>{{ review.user.username }} - {{ review.stars }} Estrelas - Avaliação feita em: {{ review.created_at|date:"d/m/Y H:i" }}</p>
-        <p>{{ review.content|linebreaks }}</p>
-        <hr>
+        <div class="media">
+            <div class="media-left">
+                <a href="{{ review.user.profile.p_pic.url }}">
+                    <img src="{{ review.user.profile.p_pic.url }}"alt="Foto de Perfil" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+                </a>
+            </div>
+
+                <div class="media-body">
+                    <h4 class="media-heading">{{ review.user.username }} - {{ review.stars }} Estrelas <small>Avaliação feita em: {{ review.created_at|date:"d/m/Y H:i" }}</small></h4>
+                    <p>{{ review.content|linebreaks }}</p>
+                </div>
+            </div>
+        </div>
+
     {% endfor %}
 
 
